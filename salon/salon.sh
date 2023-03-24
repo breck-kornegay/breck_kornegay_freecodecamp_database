@@ -11,7 +11,7 @@ APPOINTMENT_MENU() {
    echo -e "\n$ID) $NAME"
   done
 echo -e "\nPlease make a selection"
-#ask for appointment
+#ask which service
 read SERVICE_ID_SELECTED
 ID_RESULT=$($PSQL "select service_id from services where service_id=$SERVICE_ID_SELECTED")
  if [[ ! $SERVICE_ID_SELECTED =~ ^[0-9]+$ ]]
@@ -31,12 +31,11 @@ ID_RESULT=$($PSQL "select service_id from services where service_id=$SERVICE_ID_
       read CUSTOMER_NAME
       $($PSQL "insert into customers(phone,name) values('$CUSTOMER_PHONE','$CUSTOMER_NAME')")
       fi
+      
       #define customer info and make appointment
       CUSTOMER_NAME=$($PSQL "select name from customers where phone='$CUSTOMER_PHONE'")
       echo -e "\nWhat time do you want your appointment?"
       read SERVICE_TIME
-
-
       CUSTOMER_ID=$($PSQL "select customer_id from customers where phone = '$CUSTOMER_PHONE'")
       SERVICE_NAME=$($PSQL "select name from services where service_id= $SERVICE_ID_SELECTED")
       APPOINTMENT_RESULT=$($PSQL "insert into appointments(customer_id, service_id, time) values('$CUSTOMER_ID','$SERVICE_ID_SELECTED','$SERVICE_TIME')")
